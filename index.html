@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Desa Wisata Segedong - Beranda</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{ --bg:#f5f8fc; --card:#ffffff; --text:#172033; --muted:#64748b; --primary:#2563eb; --primary2:#1d4ed8; --accent:#06b6d4; --border:#e2e8f0; --shadow:0 12px 35px rgba(15,23,42,.10); }
+.dark{ --bg:#0b1220; --card:#111c2e; --text:#f8fafc; --muted:#a8b3c7; --border:#263449; --shadow:0 12px 35px rgba(0,0,0,.35); }
+*{ box-sizing:border-box; margin:0; padding:0; font-family:'Poppins',sans-serif; scroll-behavior:smooth; }
+body{ background:var(--bg); color:var(--text); line-height:1.65; }
+nav{ position:sticky; top:0; z-index:1000; background:rgba(15,40,100,.96); backdrop-filter:blur(12px); padding:12px 5%; display:flex; align-items:center; justify-content:space-between; box-shadow:var(--shadow); }
+.logo{ color:white; font-weight:800; font-size:1.3rem; }
+.logo i{ margin-right:8px; }
+nav ul{ display:flex; gap:8px; align-items:center; list-style:none; flex-wrap:wrap; justify-content:flex-end; }
+nav a, .nav-btn{ border:0; background:transparent; color:white; text-decoration:none; padding:8px 11px; border-radius:99px; cursor:pointer; font-weight:500; }
+nav a:hover, nav a.active, .nav-btn:hover{ background:rgba(255,255,255,.16); }
+.hero{ min-height:92vh; color:white; display:flex; align-items:center; justify-content:center; text-align:center; padding:30px 20px; background: linear-gradient(180deg, rgba(15,23,42,.45), rgba(15,23,42,.92)), url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=80') center/cover fixed; }
+.hero-inner{ max-width:900px; }
+.weather{ display:inline-flex; gap:10px; align-items:center; background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25); padding:9px 20px; border-radius:30px; margin-bottom:25px; backdrop-filter:blur(8px); }
+.typing-container { min-height: 130px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+h1.typing-text { font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.25; font-weight: 800; letter-spacing: -0.5px; background: linear-gradient(135deg, #ffffff 0%, #38bdf8 50%, #e0f2fe 100%); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: gradientShift 6s ease infinite; filter: drop-shadow(0 0 18px rgba(56, 189, 248, 0.6)); display: inline-block; }
+@keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(30px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.typing-cursor::after { content: '|'; animation: blinkGlow 0.8s infinite alternate; color: #38bdf8; margin-left: 6px; -webkit-text-fill-color: #38bdf8; text-shadow: 0 0 10px #38bdf8, 0 0 20px #38bdf8; }
+@keyframes blinkGlow { 0% { opacity: 1; } 100% { opacity: 0; } }
+.hero p.hero-desc { font-size:1.05rem; max-width:720px; margin:0 auto 32px; opacity: 0.92; animation: fadeInUp 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.btns{ display:flex; flex-wrap:wrap; justify-content:center; gap:12px; animation: fadeInUp 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; border:0; border-radius:12px; padding:12px 20px; text-decoration:none; cursor:pointer; font-weight:600; transition:.25s; }
+.btn:hover{ transform:translateY(-3px); }
+.primary{ background:var(--primary); color:white; }
+.primary:hover{ background:var(--primary2); }
+.secondary{ background:var(--card); color:var(--text); }
+.outline{ background:transparent; color:inherit; border:1px solid currentColor; }
+.stats{ display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:18px; margin:-50px 5% 10px; position:relative; }
+.stat{ background:var(--card); padding:28px; text-align:center; border-radius:16px; box-shadow:var(--shadow); }
+.stat i{ font-size:2rem; color:var(--primary); }
+.stat h3{ font-size:1.7rem; }
+section{ max-width:1200px; margin:auto; padding:65px 5%; }
+.title{ text-align:center; color:var(--primary); font-size:2.1rem; margin-bottom:35px; }
+.about{ background:var(--card); padding:35px; border-radius:18px; box-shadow:var(--shadow); text-align:center; }
+.actions{ display:flex; flex-wrap:wrap; gap:8px; margin-top:15px; }
+.float{ position:fixed; right:22px; bottom:22px; width:54px; height:54px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; text-decoration:none; z-index:900; box-shadow:var(--shadow); font-size:23px; border:0; cursor:pointer; }
+.top{ bottom:22px; background:var(--primary); display:none; }
+.top.show{ display:flex; }
+.modal{ position:fixed; inset:0; background:#0008; display:none; align-items:center; justify-content:center; z-index:2000; padding:20px; }
+.modal.open{ display:flex; }
+.modal-box{ background:var(--card); color:var(--text); width:min(750px,100%); max-height:90vh; overflow:auto; border-radius:18px; padding:28px; position:relative; }
+.close{ position:absolute; right:15px; top:12px; border:0; background:none; color:var(--text); font-size:28px; cursor:pointer; }
+.toast{ position:fixed; left:50%; bottom:25px; transform:translateX(-50%) translateY(100px); background:#111827; color:white; padding:12px 20px; border-radius:30px; z-index:3000; transition:.3s; }
+.toast.show{ transform:translateX(-50%) translateY(0); }
+footer{ background:#0f172a; color:white; text-align:center; padding:35px 20px; margin-top:30px; }
+@media(max-width:800px){ nav{ align-items:flex-start; } nav ul{ gap:2px; } nav a, .nav-btn{ font-size:.75rem; padding:7px; } .hero{ background-attachment:scroll; } }
+</style>
+</head>
+<body>
+
+<nav>
+<div class="logo"><i class="fa-solid fa-tree"></i> Segedong</div>
+<ul>
+<li><a href="index.html" class="active"><i class="fa-solid fa-house"></i> Beranda</a></li>
+<li><a href="wisata.html"><i class="fa-solid fa-mountain-sun"></i> Wisata & UMKM</a></li>
+<li><a href="layanan.html"><i class="fa-solid fa-hand-holding-heart"></i> Layanan</a></li>
+<li><a href="galeri.html"><i class="fa-solid fa-images"></i> Galeri</a></li>
+<li><a href="kontak.html"><i class="fa-solid fa-phone"></i> Kontak</a></li>
+<li><button class="nav-btn" onclick="toggleTheme()" title="Mode Gelap/Terang"><i class="fa-solid fa-moon"></i></button></li>
+</ul>
+</nav>
+
+<header class="hero">
+<div class="hero-inner">
+<div class="weather"><i class="fa-solid fa-cloud-sun"></i> Cuaca Segedong: <b>31°C / Berawan Tropis</b></div>
+<div class="typing-container"><h1 id="animated-text" class="typing-text typing-cursor"></h1></div>
+<p class="hero-desc">Jelajahi wisata, kuliner, UMKM, pelayanan desa, dan potensi lokal dalam satu portal interaktif.</p>
+<div class="btns">
+<a class="btn primary" href="wisata.html"><i class="fa-solid fa-compass"></i> Jelajahi Wisata</a>
+<button class="btn secondary" onclick="openModal('profilModal')"><i class="fa-solid fa-house-chimney"></i> Profil Desa</button>
+<a class="btn secondary" href="galeri.html"><i class="fa-solid fa-images"></i> Galeri Foto</a>
+<button class="btn outline" onclick="shareSite()"><i class="fa-solid fa-share-nodes"></i> Bagikan</button>
+</div>
+</div>
+</header>
+
+<div class="stats">
+<div class="stat"><i class="fa-solid fa-users"></i><h3>3,500+</h3><p>Penduduk Desa</p></div>
+<div class="stat"><i class="fa-solid fa-mountain-sun"></i><h3>12</h3><p>Spot Wisata Alam</p></div>
+<div class="stat"><i class="fa-solid fa-store"></i><h3>45+</h3><p>UMKM Lokal</p></div>
+<div class="stat"><i class="fa-solid fa-heart"></i><h3 id="favCounter">0</h3><p>Item Favorit Anda</p></div>
+</div>
+
+<section id="tentang">
+<h2 class="title">Tentang Kami</h2>
+<div class="about">
+<p><strong>Dusun Sempadung Desa Segedong</strong> adalah wilayah bagian dari Desa Segedong, Kecamatan Tebas, Kabupaten Sambas, Kalimantan Barat.</p>
+<div class="actions" style="justify-content:center; margin-top:20px;">
+<button class="btn primary" onclick="openModal('profilModal')"><i class="fa-solid fa-book-open"></i> Baca Profil Lengkap</button>
+<button class="btn secondary" onclick="openModal('visiModal')"><i class="fa-solid fa-bullseye"></i> Visi & Misi</button>
+</div>
+</div>
+</section>
+
+<button class="float top" id="topBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Kembali ke atas"><i class="fa-solid fa-arrow-up"></i></button>
+
+<footer>
+<div class="btns" style="margin-bottom:15px">
+<a class="btn outline" href="index.html"><i class="fa-solid fa-house"></i> Beranda</a>
+<a class="btn outline" href="galeri.html"><i class="fa-solid fa-images"></i> Galeri</a>
+<button class="btn outline" onclick="shareSite()"><i class="fa-solid fa-share-nodes"></i> Bagikan</button>
+</div>
+<p>© 2026 Desa Segedong Sempadung. Dibuat untuk memajukan potensi desa.</p>
+</footer>
+
+<div class="modal" id="profilModal">
+<div class="modal-box">
+<button class="close" onclick="closeModal('profilModal')">×</button>
+<h2>🏡 Profil Desa</h2><br>
+<p>Dusun Sempadung merupakan bagian dari Desa Segedong, Kecamatan Tebas, Kabupaten Sambas, Kalimantan Barat.</p><br>
+<p>Website ini menyediakan informasi wisata, kuliner, UMKM, pelayanan desa, galeri, dan fitur pengajuan dokumen interaktif.</p><br>
+<button class="btn primary" onclick="closeModal('profilModal')">Tutup</button>
+</div>
+</div>
+
+<div class="modal" id="visiModal">
+<div class="modal-box">
+<button class="close" onclick="closeModal('visiModal')">×</button>
+<h2>🎯 Visi & Misi</h2><br>
+<h3>Visi</h3>
+<p>Mendorong desa yang informatif, ramah wisata dan mendukung potensi masyarakat lokal secara digital.</p><br>
+<h3>Misi</h3>
+<p>Memperkenalkan potensi desa, mendukung UMKM, menyediakan informasi pelayanan secara transparan dan terdigitalisasi.</p>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const texts = ["Selamat Datang Di Desa Segedong Dusun Sempadung", "Jelajahi Dan Nikmati Keasrian Dan Kuliner Lokal"];
+let textIndex = 0, charIndex = 0, isDeleting = false;
+
+function typeAnimation() {
+    const el = document.getElementById("animated-text");
+    if (!el) return;
+    const currentText = texts[textIndex];
+    if (isDeleting) { el.textContent = currentText.substring(0, charIndex - 1); charIndex--; }
+    else { el.textContent = currentText.substring(0, charIndex + 1); charIndex++; }
+    let speed = isDeleting ? 35 : 75;
+    if (!isDeleting && charIndex === currentText.length) { speed = 2800; isDeleting = true; } 
+    else if (isDeleting && charIndex === 0) { isDeleting = false; textIndex = (textIndex + 1) % texts.length; speed = 400; }
+    setTimeout(typeAnimation, speed);
+}
+
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => { if(e.target === m) m.classList.remove('open'); }));
+document.addEventListener('keydown', e => { if(e.key === 'Escape') document.querySelectorAll('.modal.open').forEach(m => m.classList.remove('open')); });
+
+function toast(message){
+    let t = document.getElementById('toast');
+    t.textContent = message;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+function toggleTheme(){
+    document.body.classList.toggle('dark');
+    let mode = document.body.classList.contains('dark') ? 'dark' : 'light';
+    localStorage.setItem('theme', mode);
+    toast(mode === 'dark' ? '🌙 Mode gelap aktif' : '☀️ Mode terang aktif');
+}
+if(localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+
+function updateFavUI(){
+    let favs = JSON.parse(localStorage.getItem('fav_items') || '[]');
+    document.getElementById('favCounter').textContent = favs.length;
+}
+
+function shareSite(){
+    if(navigator.share){ navigator.share({ title: 'Desa Segedong Sempadung', text: 'Jelajahi Portal Desa Segedong Sempadung Interaktif', url: location.href }); }
+    else { navigator.clipboard.writeText(location.href); toast('🔗 Link website berhasil disalin!'); }
+}
+
+window.addEventListener('scroll', () => {
+    let top = document.getElementById('topBtn');
+    if(window.scrollY > 350){ top.classList.add('show'); } else { top.classList.remove('show'); }
+});
+
+document.addEventListener('DOMContentLoaded', () => { typeAnimation(); updateFavUI(); });
+</script>
+</body>
+</html>

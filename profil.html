@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profil Desa - Segedong</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{ --bg:#f5f8fc; --card:#ffffff; --text:#172033; --muted:#64748b; --primary:#2563eb; --border:#e2e8f0; --shadow:0 12px 35px rgba(15,23,42,.10); }
+.dark{ --bg:#0b1220; --card:#111c2e; --text:#f8fafc; --muted:#a8b3c7; --border:#263449; }
+*{ box-sizing:border-box; margin:0; padding:0; font-family:'Poppins',sans-serif; }
+body{ background:var(--bg); color:var(--text); line-height:1.65; }
+nav{ position:sticky; top:0; z-index:1000; background:rgba(15,40,100,.96); padding:12px 5%; display:flex; align-items:center; justify-content:space-between; }
+.logo{ color:white; font-weight:800; font-size:1.3rem; }
+nav ul{ display:flex; gap:8px; list-style:none; }
+nav a, .nav-btn{ color:white; text-decoration:none; padding:8px 11px; border-radius:99px; border:0; background:transparent; cursor:pointer; }
+nav a.active{ background:rgba(255,255,255,.16); }
+section{ max-width:900px; margin:auto; padding:40px 5%; }
+.title{ text-align:center; color:var(--primary); font-size:2.1rem; margin-bottom:25px; }
+.box{ background:var(--card); padding:30px; border-radius:18px; box-shadow:var(--shadow); margin-bottom:25px; }
+footer{ background:#0f172a; color:white; text-align:center; padding:35px 20px; margin-top:30px; }
+</style>
+</head>
+<body>
+
+<nav>
+<div class="logo"><i class="fa-solid fa-tree"></i> Segedong</div>
+<ul>
+<li><a href="index.html"><i class="fa-solid fa-house"></i> Beranda</a></li>
+<li><a href="wisata.html"><i class="fa-solid fa-mountain-sun"></i> Wisata & UMKM</a></li>
+<li><a href="layanan.html"><i class="fa-solid fa-hand-holding-heart"></i> Layanan</a></li>
+<li><a href="profil.html" class="active"><i class="fa-solid fa-circle-info"></i> Profil</a></li>
+<li><a href="kontak.html"><i class="fa-solid fa-phone"></i> Kontak</a></li>
+<li><button class="nav-btn" onclick="toggleTheme()"><i class="fa-solid fa-moon"></i></button></li>
+</ul>
+</nav>
+
+<section>
+<h2 class="title">Profil Desa Segedong</h2>
+
+<div class="box">
+<h3>🏡 Gambaran Umum</h3><br>
+<p><strong>Dusun Sempadung</strong> merupakan bagian dari Desa Segedong, Kecamatan Tebas, Kabupaten Sambas, Kalimantan Barat.</p><br>
+<p>Desa ini dikenal memiliki potensi alam persawahan yang asri serta sektor UMKM kuliner tradisional seperti Bubur Pedas khas Sambas.</p>
+</div>
+
+<div class="box">
+<h3>🎯 Visi & Misi</h3><br>
+<h4>Visi</h4>
+<p>Mendorong desa yang informatif, ramah wisata, dan mendukung potensi masyarakat lokal secara digital.</p><br>
+<h4>Misi</h4>
+<p>Memperkenalkan potensi desa, mendukung UMKM, serta menyediakan informasi pelayanan yang transparan.</p>
+</div>
+</section>
+
+<footer>
+<p>© 2026 Desa Segedong Sempadung</p>
+</footer>
+
+<script>
+function toggleTheme(){ document.body.classList.toggle('dark'); }
+</script>
+</body>
+</html>

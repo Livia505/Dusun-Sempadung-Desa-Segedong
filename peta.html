@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peta Lokasi Desa Segedong</title>
+    <!-- Font Awesome untuk Ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f7f6;
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .header {
+            background-color: #1b5e20;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h2 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .map-wrapper {
+            position: relative;
+            width: 100%;
+            height: 400px;
+        }
+
+        .map-wrapper iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .info-card {
+            padding: 20px;
+            background-color: #fff;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .info-item i {
+            color: #2e7d32;
+            margin-right: 12px;
+            margin-top: 4px;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h2>Peta Wilayah Desa</h2>
+        <p>Dusun Sempadung, Desa Segedong, Kecamatan Tebas</p>
+    </div>
+
+    <!-- Peta Google Maps Embed -->
+    <div class="map-wrapper">
+        <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63821.21858852155!2d109.1558296924845!3d1.2323032742137688!2m3!1f0!0!f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31e367e80a969bfd%3A0xbca88d3f6bd5bd49!2sSegedong%2C%20Kec.%20Tebas%2C%20Kabupaten%20Sambas%2C%20Kalimantan%20Barat!5e0!3m2!1sid!2sid!4v1710000000000!5m2!1sid!2sid" 
+            allowfullscreen="" 
+            loading="lazy" 
+            referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+    </div>
+
+    <!-- Informasi Detail Alamat -->
+    <div class="info-card">
+        <div class="info-item">
+            <i class="fa-solid fa-location-dot"></i>
+            <div>
+                <strong>Alamat Utama:</strong><br>
+                Dusun Sempadung, RT.001 / RW.001, Desa Segedong, Kec. Tebas, Kabupaten Sambas, Kalimantan Barat 79461
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
