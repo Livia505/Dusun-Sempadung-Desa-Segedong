@@ -152,10 +152,32 @@ if(localStorage.getItem('theme') === 'dark') document.body.classList.add('dark')
 function submitSurat(e){
     e.preventDefault();
     let nama = document.getElementById('suratNama').value;
-    closeModal('pengajuanSuratModal');
-    toast(`📩 Pengajuan surat atas nama ${nama} berhasil dikirim!`);
-    e.target.reset();
+    let nik = document.getElementById('suratNik').value;
+    let jenis = document.getElementById('suratJenis').value;
+    let keperluan = document.getElementById('suratKeperluan').value;
+
+    let scriptURL = 'https://script.google.com/macros/s/AKfycbzetSXPSFV7nXdJnZ8wHyj_XJkdYQsKgb0atgnbAtNErxfyI6vrau6BaftpIQuxjf4/exec';
+    
+    toast('⏳ Mengirim pengajuan...');
+
+    let formData = new FormData();
+    formData.append('nama', nama);
+    formData.append('nik', nik);
+    formData.append('jenis', jenis);
+    formData.append('keperluan', keperluan);
+
+    fetch(scriptURL, { method: 'POST', body: formData })
+        .then(response => {
+            closeModal('pengajuanSuratModal');
+            toast(`📩 Pengajuan surat atas nama ${nama} berhasil dikirim!`);
+            e.target.reset();
+        })
+        .catch(error => {
+            toast('❌ Gagal mengirim data. Coba lagi.');
+            console.error('Error!', error.message);
+        });
 }
+
 
 function getAgenda(){ return JSON.parse(localStorage.getItem('desa_agenda') || '[{"judul":"Gotong Royong Bersama","tanggal":"2026-09-10"},{"judul":"Musyawarah Pembangunan Desa","tanggal":"2026-09-15"}]'); }
 
