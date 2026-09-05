@@ -27,7 +27,7 @@ input, textarea, select{ width:100%; padding:13px; margin-bottom:12px; border:1p
 .btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; border:0; border-radius:12px; padding:12px 20px; text-decoration:none; cursor:pointer; font-weight:600; transition:.25s; }
 .primary{ background:var(--primary); color:white; }
 .outline{ background:transparent; color:inherit; border:1px solid currentColor; }
-.small{ padding:9px 12px; font-size:.84rem; border-radius:9px; }
+.small{ padding:9px 12px; font-size:.84rem; border-radius:99px; }
 .modal{ position:fixed; inset:0; background:#0008; display:none; align-items:center; justify-content:center; z-index:2000; padding:20px; }
 .modal.open{ display:flex; }
 .modal-box{ background:var(--card); color:var(--text); width:min(750px,100%); max-height:90vh; overflow:auto; border-radius:18px; padding:28px; position:relative; }
@@ -64,9 +64,7 @@ footer{ background:#0f172a; color:white; text-align:center; padding:35px 20px; m
 <button class="service" onclick="printPage()"><i class="fa-solid fa-print"></i><h3>Cetak</h3><p>Cetak halaman</p></button>
 <button class="service" onclick="downloadInfo()"><i class="fa-solid fa-download"></i><h3>Download</h3><p>Unduh informasi</p></button>
 <button class="service" onclick="copyInfo()"><i class="fa-solid fa-copy"></i><h3>Salin</h3><p>Salin informasi desa</p></button>
-
-    <button class="service" onclick="openModal('adminModal')"><i class="fa-solid fa-table"></i><h3>Data Pengajuan</h3></button>
-
+<button class="service" onclick="openModal('adminModal')"><i class="fa-solid fa-table"></i><h3>Data Pengajuan</h3><p>Panel Admin Desa</p></button>
 </div>
 </section>
 
@@ -129,6 +127,29 @@ footer{ background:#0f172a; color:white; text-align:center; padding:35px 20px; m
 </div>
 </div>
 
+<!-- Modal Admin Data Pengajuan -->
+<div class="modal" id="adminModal">
+<div class="modal-box" style="max-width:850px; overflow-x:auto;">
+<button class="close" onclick="closeModal('adminModal')">&times;</button>
+<h2>📊 Data Pengajuan Surat Warga</h2><br>
+<button class="btn primary small" onclick="loadAdminData()" style="margin-bottom:15px;"><i class="fa-solid fa-rotate-right"></i> Refresh Data</button>
+<table border="1" style="width:100%; border-collapse:collapse; text-align:left;" cellpadding="8">
+  <thead>
+    <tr style="background:var(--primary); color:white;">
+      <th>Tanggal</th>
+      <th>Nama</th>
+      <th>NIK</th>
+      <th>Jenis Surat</th>
+      <th>Keperluan</th>
+    </tr>
+  </thead>
+  <tbody id="tabelAdminBody">
+    <tr><td colspan="5">Memuat data...</td></tr>
+  </tbody>
+</table>
+</div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -174,6 +195,7 @@ function submitSurat(e){
             closeModal('pengajuanSuratModal');
             toast(`📩 Pengajuan surat atas nama ${nama} berhasil dikirim!`);
             e.target.reset();
+            loadAdminData();
         })
         .catch(error => {
             toast('❌ Gagal mengirim data. Coba lagi.');
@@ -181,6 +203,38 @@ function submitSurat(e){
         });
 }
 
+function loadAdminData() {
+  let scriptURL = 'https://script.google.com/macros/s/AKfycbxDsqQ4epCr39Q52dmJqXyh6jotjccEaVg3GO7gr6iRGDQLfIod-S5rSdA9QLP_IRgf/exec';
+  let tbody = document.getElementById('tabelAdminBody');
+  if (!tbody) return;
+  
+  tbody.innerHTML = '<tr><td colspan="5">Memuat data terbaru...</td></tr>';
+
+  fetch(scriptURL)
+    .then(response => response.json())
+    .then(data => {
+      tbody.innerHTML = '';
+      if (!data || data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5">Belum ada pengajuan surat.</td></tr>';
+        return;
+      }
+      data.forEach(row => {
+        let tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${row[0] || '-'}</td>
+          <td>${row[1] || '-'}</td>
+          <td>${row[2] || '-'}</td>
+          <td>${row[3] || '-'}</td>
+          <td>${row[4] || '-'}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    })
+    .catch(error => {
+      tbody.innerHTML = '<tr><td colspan="5">❌ Gagal memuat data.</td></tr>';
+      console.error('Error:', error);
+    });
+}
 
 function getAgenda(){ return JSON.parse(localStorage.getItem('desa_agenda') || '[{"judul":"Gotong Royong Bersama","tanggal":"2026-09-10"},{"judul":"Musyawarah Pembangunan Desa","tanggal":"2026-09-15"}]'); }
 
@@ -269,7 +323,11 @@ function copyInfo(){
     toast('📋 Informasi berhasil disalin!');
 }
 
-document.addEventListener('DOMContentLoaded', () => { updateAgendaUI(); updateBeritaUI(); });
+document.addEventListener('DOMContentLoaded', () => { 
+    updateAgendaUI(); 
+    updateBeritaUI(); 
+    loadAdminData();
+});
 </script>
 </body>
 </html>
