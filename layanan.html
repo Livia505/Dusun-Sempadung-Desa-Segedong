@@ -434,4 +434,25 @@ function printPage(){ window.print(); }
 
 function downloadInfo(){
     let text = `INFORMASI DESA SEGEDONG SEMPADUNG\n\nLokasi: Dusun Sempadung, Desa Segedong, Kec. Tebas, Kab. Sambas, Kalbar\nJam Layanan Kantor: 08.00 - 15.00 WIB (Senin - Jumat)\n\nDaftar Layanan Portal:\n- Pengajuan Surat Online\n- Informasi Wisata & Kuliner UMKM\n- Agenda & Berita Desa Terkini`;
-    
+    let blob = new Blob([text], {type:'text/plain'});
+    let url = URL.createObjectURL(blob);
+    let a = document.createElement('a');
+    a.href = url;
+    a.download = 'Informasi-Desa-Segedong.txt';
+    a.click();
+    URL.revokeObjectURL(url);
+    toast('📥 Informasi berhasil diunduh!');
+}
+
+function copyInfo(){
+    navigator.clipboard.writeText('Desa Segedong Sempadung - Kecamatan Tebas, Kabupaten Sambas, Kalimantan Barat');
+    toast('📋 Informasi berhasil disalin!');
+}
+
+document.addEventListener('DOMContentLoaded', () => { 
+    updateAgendaUI(); 
+    updateBeritaUI(); 
+});
+</script>
+</body>
+</html>
