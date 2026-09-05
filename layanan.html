@@ -26,16 +26,18 @@ section{ max-width:1200px; margin:auto; padding:65px 5%; }
 input, textarea, select{ width:100%; padding:13px; margin-bottom:12px; border:1px solid var(--border); border-radius:10px; background:var(--bg); color:var(--text); }
 .btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; border:0; border-radius:12px; padding:12px 20px; text-decoration:none; cursor:pointer; font-weight:600; transition:.25s; }
 .primary{ background:var(--primary); color:white; }
+.danger{ background:#ef4444; color:white; }
 .outline{ background:transparent; color:inherit; border:1px solid currentColor; }
-.small{ padding:9px 12px; font-size:.84rem; border-radius:99px; }
+.small{ padding:6px 12px; font-size:.84rem; border-radius:8px; }
 .modal{ position:fixed; inset:0; background:#0008; display:none; align-items:center; justify-content:center; z-index:2000; padding:20px; }
 .modal.open{ display:flex; }
-.modal-box{ background:var(--card); color:var(--text); width:min(750px,100%); max-height:90vh; overflow:auto; border-radius:18px; padding:28px; position:relative; }
+.modal-box{ background:var(--card); color:var(--text); width:min(850px,100%); max-height:90vh; overflow:auto; border-radius:18px; padding:28px; position:relative; }
 .close{ position:absolute; right:15px; top:12px; border:0; background:none; color:var(--text); font-size:28px; cursor:pointer; }
 .toast{ position:fixed; left:50%; bottom:25px; transform:translateX(-50%) translateY(100px); background:#111827; color:white; padding:12px 20px; border-radius:30px; z-index:3000; transition:.3s; }
 .toast.show{ transform:translateX(-50%) translateY(0); }
 .item-list{ margin-top:15px; border-top:1px solid var(--border); padding-top:15px; }
 .item-row{ background:var(--bg); padding:10px 15px; border-radius:8px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; }
+.tab-header{ display:flex; gap:10px; margin-bottom:15px; }
 footer{ background:#0f172a; color:white; text-align:center; padding:35px 20px; margin-top:30px; }
 </style>
 </head>
@@ -127,34 +129,66 @@ footer{ background:#0f172a; color:white; text-align:center; padding:35px 20px; m
 </div>
 </div>
 
-<!-- Modal Admin Data Pengajuan -->
+<!-- Modal Admin Data Pengajuan & Riwayat Hapus -->
 <div class="modal" id="adminModal">
-<div class="modal-box" style="max-width:850px; overflow-x:auto;">
+<div class="modal-box" style="max-width:900px; overflow-x:auto;">
 <button class="close" onclick="closeModal('adminModal')">&times;</button>
-<h2>📊 Data Pengajuan Surat Warga (Admin)</h2><br>
-<button class="btn primary small" onclick="loadAdminData()" style="margin-bottom:15px;"><i class="fa-solid fa-rotate-right"></i> Refresh Data</button>
-<table border="1" style="width:100%; border-collapse:collapse; text-align:left;" cellpadding="8">
-  <thead>
-    <tr style="background:var(--primary); color:white;">
-      <th>Tanggal</th>
-      <th>Nama</th>
-      <th>NIK</th>
-      <th>Jenis Surat</th>
-      <th>Keperluan</th>
-    </tr>
-  </thead>
-  <tbody id="tabelAdminBody">
-    <tr><td colspan="5">Memuat data...</td></tr>
-  </tbody>
-</table>
+<h2>📊 Panel Admin - Data Pengajuan</h2><br>
+
+<div class="tab-header">
+  <button id="btnTabUtama" class="btn primary small" onclick="switchTab('utama')"><i class="fa-solid fa-table"></i> Data Aktif</button>
+  <button id="btnTabRiwayat" class="btn outline small" onclick="switchTab('riwayat')"><i class="fa-solid fa-clock-rotate-left"></i> Riwayat Hapus</button>
+  <button class="btn primary small" onclick="refreshAdminData()"><i class="fa-solid fa-rotate-right"></i> Refresh</button>
+</div>
+
+<!-- Tab Data Aktif -->
+<div id="tabUtama">
+  <table border="1" style="width:100%; border-collapse:collapse; text-align:left;" cellpadding="8">
+    <thead>
+      <tr style="background:var(--primary); color:white;">
+        <th>Tanggal</th>
+        <th>Nama</th>
+        <th>NIK</th>
+        <th>Jenis Surat</th>
+        <th>Keperluan</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody id="tabelAdminBody">
+      <tr><td colspan="6">Memuat data...</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Tab Riwayat Hapus -->
+<div id="tabRiwayat" style="display:none;">
+  <table border="1" style="width:100%; border-collapse:collapse; text-align:left;" cellpadding="8">
+    <thead>
+      <tr style="background:#64748b; color:white;">
+        <th>Tgl Hapus</th>
+        <th>Tgl Ajuan</th>
+        <th>Nama</th>
+        <th>NIK</th>
+        <th>Jenis Surat</th>
+        <th>Keperluan</th>
+      </tr>
+    </thead>
+    <tbody id="tabelRiwayatBody">
+      <tr><td colspan="6">Memuat riwayat hapus...</td></tr>
+    </tbody>
+  </table>
+</div>
+
 </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// Kata sandi untuk mengakses Data Pengajuan
 const ADMIN_PASSWORD = "adminsegedong";
+const scriptURL = 'https://script.google.com/macros/s/AKfycbw9lnXXcgrAqRV8XHUIme9uE_5VDTxSM9W1ncKBm_acqDysIhPu5JLFPf16jcaY3y8b/exec';
+
+let currentTab = 'utama';
 
 function openModal(id){ document.getElementById(id).classList.add('open'); }
 function closeModal(id){ document.getElementById(id).classList.remove('open'); }
@@ -176,18 +210,42 @@ function toggleTheme(){
 }
 if(localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
 
-// Fungsi Verifikasi Kata Sandi Admin
 function aksesAdminModal() {
     let inputPassword = prompt("Masukkan sandi untuk melihat data pengajuan:");
-    if (inputPassword === null) {
-        return;
-    }
+    if (inputPassword === null) return;
     if (inputPassword === ADMIN_PASSWORD) {
         openModal('adminModal');
-        loadAdminData();
+        switchTab('utama');
     } else {
         alert("❌ Kata sandi salah! Akses ditolak.");
     }
+}
+
+function switchTab(tab) {
+    currentTab = tab;
+    let tabUtama = document.getElementById('tabUtama');
+    let tabRiwayat = document.getElementById('tabRiwayat');
+    let btnTabUtama = document.getElementById('btnTabUtama');
+    let btnTabRiwayat = document.getElementById('btnTabRiwayat');
+
+    if (tab === 'utama') {
+        tabUtama.style.display = 'block';
+        tabRiwayat.style.display = 'none';
+        btnTabUtama.className = 'btn primary small';
+        btnTabRiwayat.className = 'btn outline small';
+        loadAdminData();
+    } else {
+        tabUtama.style.display = 'none';
+        tabRiwayat.style.display = 'block';
+        btnTabUtama.className = 'btn outline small';
+        btnTabRiwayat.className = 'btn primary small';
+        loadRiwayatData();
+    }
+}
+
+function refreshAdminData() {
+    if (currentTab === 'utama') loadAdminData();
+    else loadRiwayatData();
 }
 
 function submitSurat(e){
@@ -197,8 +255,6 @@ function submitSurat(e){
     let jenis = document.getElementById('suratJenis').value;
     let keperluan = document.getElementById('suratKeperluan').value;
 
-    let scriptURL = 'https://script.google.com/macros/s/AKfycbxDsqQ4epCr39Q52dmJqXyh6jotjccEaVg3GO7gr6iRGDQLfIod-S5rSdA9QLP_IRgf/exec';
-    
     toast('⏳ Mengirim pengajuan...');
 
     let formData = new FormData();
@@ -220,18 +276,71 @@ function submitSurat(e){
 }
 
 function loadAdminData() {
-  let scriptURL = 'https://script.google.com/macros/s/AKfycbxDsqQ4epCr39Q52dmJqXyh6jotjccEaVg3GO7gr6iRGDQLfIod-S5rSdA9QLP_IRgf/exec';
   let tbody = document.getElementById('tabelAdminBody');
   if (!tbody) return;
-  
-  tbody.innerHTML = '<tr><td colspan="5">Memuat data terbaru...</td></tr>';
+  tbody.innerHTML = '<tr><td colspan="6">Memuat data terbaru...</td></tr>';
 
   fetch(scriptURL, { method: 'GET', redirect: 'follow' })
     .then(response => response.json())
     .then(data => {
       tbody.innerHTML = '';
       if (!data || data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5">Belum ada pengajuan surat.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6">Belum ada pengajuan surat.</td></tr>';
+        return;
+      }
+      data.forEach((row, index) => {
+        let tr = document.createElement('tr');
+        let rowIndexInSheet = index + 2; // Baris spreadsheet 1-based (header di baris 1)
+        tr.innerHTML = `
+          <td>${row[0] || '-'}</td>
+          <td>${row[1] || '-'}</td>
+          <td>${row[2] || '-'}</td>
+          <td>${row[3] || '-'}</td>
+          <td>${row[4] || '-'}</td>
+          <td>
+            <button class="btn danger small" onclick="hapusPengajuan(${rowIndexInSheet}, '${row[1] || 'Warga'}')"><i class="fa-solid fa-trash"></i> Hapus</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    })
+    .catch(error => {
+      tbody.innerHTML = '<tr><td colspan="6">❌ Gagal memuat data.</td></tr>';
+      console.error('Error:', error);
+    });
+}
+
+function hapusPengajuan(rowIndex, nama) {
+    if (!confirm(`Apakah Anda yakin ingin menghapus data pengajuan atas nama "${nama}"?`)) return;
+
+    toast('⏳ Menghapus data...');
+    let formData = new FormData();
+    formData.append('action', 'delete');
+    formData.append('rowIndex', rowIndex);
+
+    fetch(scriptURL, { method: 'POST', body: formData })
+        .then(res => res.json())
+        .then(res => {
+            toast('✅ Data berhasil dihapus!');
+            loadAdminData();
+        })
+        .catch(err => {
+            toast('❌ Gagal menghapus data.');
+            console.error(err);
+        });
+}
+
+function loadRiwayatData() {
+  let tbody = document.getElementById('tabelRiwayatBody');
+  if (!tbody) return;
+  tbody.innerHTML = '<tr><td colspan="6">Memuat riwayat hapus...</td></tr>';
+
+  fetch(scriptURL + '?action=getRiwayat', { method: 'GET', redirect: 'follow' })
+    .then(response => response.json())
+    .then(data => {
+      tbody.innerHTML = '';
+      if (!data || data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6">Belum ada riwayat penghapusan.</td></tr>';
         return;
       }
       data.forEach(row => {
@@ -242,12 +351,13 @@ function loadAdminData() {
           <td>${row[2] || '-'}</td>
           <td>${row[3] || '-'}</td>
           <td>${row[4] || '-'}</td>
+          <td>${row[5] || '-'}</td>
         `;
         tbody.appendChild(tr);
       });
     })
     .catch(error => {
-      tbody.innerHTML = '<tr><td colspan="5">❌ Gagal memuat data. Pastikan fungsi doGet terpasang & ter-deploy.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="6">❌ Gagal memuat riwayat.</td></tr>';
       console.error('Error:', error);
     });
 }
@@ -324,25 +434,4 @@ function printPage(){ window.print(); }
 
 function downloadInfo(){
     let text = `INFORMASI DESA SEGEDONG SEMPADUNG\n\nLokasi: Dusun Sempadung, Desa Segedong, Kec. Tebas, Kab. Sambas, Kalbar\nJam Layanan Kantor: 08.00 - 15.00 WIB (Senin - Jumat)\n\nDaftar Layanan Portal:\n- Pengajuan Surat Online\n- Informasi Wisata & Kuliner UMKM\n- Agenda & Berita Desa Terkini`;
-    let blob = new Blob([text], {type:'text/plain'});
-    let url = URL.createObjectURL(blob);
-    let a = document.createElement('a');
-    a.href = url;
-    a.download = 'Informasi-Desa-Segedong.txt';
-    a.click();
-    URL.revokeObjectURL(url);
-    toast('📥 Informasi berhasil diunduh!');
-}
-
-function copyInfo(){
-    navigator.clipboard.writeText('Desa Segedong Sempadung - Kecamatan Tebas, Kabupaten Sambas, Kalimantan Barat');
-    toast('📋 Informasi berhasil disalin!');
-}
-
-document.addEventListener('DOMContentLoaded', () => { 
-    updateAgendaUI(); 
-    updateBeritaUI(); 
-});
-</script>
-</body>
-</html>
+    
