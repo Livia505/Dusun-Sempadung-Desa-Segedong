@@ -64,7 +64,7 @@ footer{ background:#0f172a; color:white; text-align:center; padding:35px 20px; m
 <button class="service" onclick="printPage()"><i class="fa-solid fa-print"></i><h3>Cetak</h3><p>Cetak halaman</p></button>
 <button class="service" onclick="downloadInfo()"><i class="fa-solid fa-download"></i><h3>Download</h3><p>Unduh informasi</p></button>
 <button class="service" onclick="copyInfo()"><i class="fa-solid fa-copy"></i><h3>Salin</h3><p>Salin informasi desa</p></button>
-<button class="service" onclick="openModal('adminModal')"><i class="fa-solid fa-table"></i><h3>Data Pengajuan</h3><p>Panel Admin Desa</p></button>
+<button class="service" onclick="aksesAdminModal()"><i class="fa-solid fa-user-shield"></i><h3>Data Pengajuan</h3><p>Khusus Admin Desa</p></button>
 </div>
 </section>
 
@@ -131,7 +131,7 @@ footer{ background:#0f172a; color:white; text-align:center; padding:35px 20px; m
 <div class="modal" id="adminModal">
 <div class="modal-box" style="max-width:850px; overflow-x:auto;">
 <button class="close" onclick="closeModal('adminModal')">&times;</button>
-<h2>📊 Data Pengajuan Surat Warga</h2><br>
+<h2>📊 Data Pengajuan Surat Warga (Admin)</h2><br>
 <button class="btn primary small" onclick="loadAdminData()" style="margin-bottom:15px;"><i class="fa-solid fa-rotate-right"></i> Refresh Data</button>
 <table border="1" style="width:100%; border-collapse:collapse; text-align:left;" cellpadding="8">
   <thead>
@@ -153,6 +153,9 @@ footer{ background:#0f172a; color:white; text-align:center; padding:35px 20px; m
 <div class="toast" id="toast"></div>
 
 <script>
+// Kata sandi untuk mengakses Data Pengajuan
+const ADMIN_PASSWORD = "adminsegedong";
+
 function openModal(id){ document.getElementById(id).classList.add('open'); }
 function closeModal(id){ document.getElementById(id).classList.remove('open'); }
 document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => { if(e.target === m) m.classList.remove('open'); }));
@@ -172,6 +175,20 @@ function toggleTheme(){
     toast(mode === 'dark' ? '🌙 Mode gelap aktif' : '☀️ Mode terang aktif');
 }
 if(localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+
+// Fungsi Verifikasi Kata Sandi Admin
+function aksesAdminModal() {
+    let inputPassword = prompt("🔐 Masukkan Kata Sandi Admin Desa:");
+    if (inputPassword === null) {
+        return;
+    }
+    if (inputPassword === ADMIN_PASSWORD) {
+        openModal('adminModal');
+        loadAdminData();
+    } else {
+        alert("❌ Kata sandi salah! Akses ditolak.");
+    }
+}
 
 function submitSurat(e){
     e.preventDefault();
@@ -195,7 +212,6 @@ function submitSurat(e){
             closeModal('pengajuanSuratModal');
             toast(`📩 Pengajuan surat atas nama ${nama} berhasil dikirim!`);
             e.target.reset();
-            loadAdminData();
         })
         .catch(error => {
             toast('❌ Gagal mengirim data. Coba lagi.');
@@ -210,7 +226,7 @@ function loadAdminData() {
   
   tbody.innerHTML = '<tr><td colspan="5">Memuat data terbaru...</td></tr>';
 
-  fetch(scriptURL)
+  fetch(scriptURL, { method: 'GET', redirect: 'follow' })
     .then(response => response.json())
     .then(data => {
       tbody.innerHTML = '';
@@ -231,7 +247,7 @@ function loadAdminData() {
       });
     })
     .catch(error => {
-      tbody.innerHTML = '<tr><td colspan="5">❌ Gagal memuat data.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="5">❌ Gagal memuat data. Pastikan fungsi doGet terpasang & ter-deploy.</td></tr>';
       console.error('Error:', error);
     });
 }
@@ -326,8 +342,8 @@ function copyInfo(){
 document.addEventListener('DOMContentLoaded', () => { 
     updateAgendaUI(); 
     updateBeritaUI(); 
-    loadAdminData();
 });
 </script>
 </body>
 </html>
+
